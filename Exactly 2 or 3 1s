@@ -1,0 +1,58 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Function to simulate the FA
+bool simulateFA(const string &input) {
+    // Define states
+    enum State { Q0, Q1, Q2, Q3, Q4 };
+    State currentState = Q0; // Start at the initial state
+
+    // Process each character of the input string
+    for (char ch : input) {
+        switch (currentState) {
+            case Q0:
+                if (ch == '1') currentState = Q1;
+                // On '0', stay in Q0
+                break;
+
+            case Q1:
+                if (ch == '1') currentState = Q2;
+                // On '0', stay in Q1
+                break;
+
+            case Q2:
+                if (ch == '1') currentState = Q3;
+                // On '0', stay in Q2
+                break;
+
+            case Q3:
+                if (ch == '1') currentState = Q4;
+                // On '0', stay in Q3
+                break;
+
+            case Q4:
+                // Once in Q4, stay rejecting
+                break;
+        }
+    }
+
+    // Accept if the final state is Q2 or Q3
+    return currentState == Q2 || currentState == Q3;
+}
+
+int main() {
+    string input;
+    cout << "Enter a binary string: ";
+    cin >> input;
+
+    // Check if the string is accepted by the FA
+    if (simulateFA(input)) {
+        cout << "The string is accepted (exactly two or three '1's)." << endl;
+    } else {
+        cout << "The string is rejected (does not have exactly two or three '1's)." << endl;
+    }
+
+    return 0;
+}
