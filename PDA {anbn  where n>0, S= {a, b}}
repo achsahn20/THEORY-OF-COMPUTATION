@@ -1,0 +1,73 @@
+#include <iostream>
+#include <stack>
+#include <string>
+
+using namespace std;
+
+// Function to simulate the PDA
+bool simulatePDA(const string &input) {
+    stack<char> pdaStack;
+    enum State { Q0, Q1, Q2, Q3 };
+    State currentState = Q0;
+
+    for (char ch : input) {
+        switch (currentState) {
+            case Q0:
+                if (ch == 'a') {
+                    currentState = Q1;
+                    pdaStack.push('X'); // Push onto stack for each 'a'
+                } else {
+                    return false; // Input must start with 'a'
+                }
+                break;
+
+            case Q1:
+                if (ch == 'a') {
+                    pdaStack.push('X'); // Push onto stack for each 'a'
+                } else if (ch == 'b') {
+                    if (!pdaStack.empty()) {
+                        pdaStack.pop(); // Pop stack for each 'b'
+                        currentState = Q2;
+                    } else {
+                        return false; // Stack must not be empty when reading 'b'
+                    }
+                } else {
+                    return false; // Invalid character
+                }
+                break;
+
+            case Q2:
+                if (ch == 'b') {
+                    if (!pdaStack.empty()) {
+                        pdaStack.pop(); // Continue popping for each 'b'
+                    } else {
+                        return false; // Stack must not be empty
+                    }
+                } else {
+                    return false; // Invalid character
+                }
+                break;
+
+            default:
+                return false;
+        }
+    }
+
+    // Accept if the stack is empty and the final state is Q2
+    return pdaStack.empty();
+}
+
+int main() {
+    string input;
+    cout << "Enter a string over {a, b}: ";
+    cin >> input;
+
+    // Check if the string is accepted by the PDA
+    if (simulatePDA(input)) {
+        cout << "The string is accepted (belongs to the language {a^n b^n | n > 0})." << endl;
+    } else {
+        cout << "The string is rejected (does not belong to the language {a^n b^n | n > 0})." << endl;
+    }
+
+    return 0;
+}
