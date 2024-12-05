@@ -1,0 +1,77 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Simulate FA1 for L1
+bool simulateFA1(const string &input, size_t &splitIndex) {
+    enum State { Q0, Q1, Q2 }; // Example states for FA1
+    State currentState = Q0;
+
+    for (size_t i = 0; i < input.size(); ++i) {
+        char ch = input[i];
+        switch (currentState) {
+            case Q0:
+                if (ch == 'a') currentState = Q1;
+                else return false;
+                break;
+            case Q1:
+                if (ch == 'b') currentState = Q2;
+                else return false;
+                break;
+            case Q2:
+                splitIndex = i + 1; // Record where FA1 ends
+                return true;
+        }
+    }
+    return false;
+}
+
+// Simulate FA2 for L2
+bool simulateFA2(const string &input, size_t startIndex) {
+    enum State { Q0, Q1, Q2 }; // Example states for FA2
+    State currentState = Q0;
+
+    for (size_t i = startIndex; i < input.size(); ++i) {
+        char ch = input[i];
+        switch (currentState) {
+            case Q0:
+                if (ch == 'b') currentState = Q1;
+                else return false;
+                break;
+            case Q1:
+                if (ch == 'a') currentState = Q2;
+                else return false;
+                break;
+            case Q2:
+                return true;
+        }
+    }
+    return false;
+}
+
+// Main function to simulate L1.L2
+bool simulateConcatenationFA(const string &input) {
+    size_t splitIndex = 0;
+
+    // Simulate FA1 (L1)
+    if (simulateFA1(input, splitIndex)) {
+        // Simulate FA2 (L2) from the split point
+        return simulateFA2(input, splitIndex);
+    }
+    return false;
+}
+
+int main() {
+    string input;
+    cout << "Enter a string: ";
+    cin >> input;
+
+    if (simulateConcatenationFA(input)) {
+        cout << "The string is accepted (belongs to L1.L2)." << endl;
+    } else {
+        cout << "The string is rejected (does not belong to L1.L2)." << endl;
+    }
+
+    return 0;
+}
