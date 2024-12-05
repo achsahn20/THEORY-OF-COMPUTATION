@@ -1,0 +1,74 @@
+#include <iostream>
+#include <stack>
+#include <string>
+
+using namespace std;
+
+// Function to simulate the PDA
+bool simulatePDA(const string &input) {
+    stack<char> pdaStack;
+    enum State { Q0, Q1, Q2, Q3 };
+    State currentState = Q0;
+
+    for (char ch : input) {
+        switch (currentState) {
+            case Q0:
+                if (ch == 'a' || ch == 'b') {
+                    pdaStack.push(ch); // Push characters of w onto the stack
+                } else if (ch == 'X') {
+                    currentState = Q1; // Transition on the special symbol X
+                } else {
+                    return false; // Invalid character
+                }
+                break;
+
+            case Q1:
+                if (!pdaStack.empty() && (ch == 'a' || ch == 'b')) {
+                    if (pdaStack.top() == ch) {
+                        pdaStack.pop(); // Pop and match characters of w^R
+                    } else {
+                        return false; // Mismatch in w and w^R
+                    }
+                    currentState = Q2;
+                } else {
+                    return false; // Stack should not be empty or invalid character
+                }
+                break;
+
+            case Q2:
+                if (!pdaStack.empty() && (ch == 'a' || ch == 'b')) {
+                    if (pdaStack.top() == ch) {
+                        pdaStack.pop(); // Continue popping and matching
+                    } else {
+                        return false; // Mismatch in w and w^R
+                    }
+                } else if (pdaStack.empty()) {
+                    currentState = Q3; // Transition to accept state if stack is empty
+                } else {
+                    return false;
+                }
+                break;
+
+            default:
+                return false;
+        }
+    }
+
+    // Accept if the stack is empty and the state is Q3
+    return pdaStack.empty() && currentState == Q3;
+}
+
+int main() {
+    string input;
+    cout << "Enter a string over {a, b, X}: ";
+    cin >> input;
+
+    // Check if the string is accepted by the PDA
+    if (simulatePDA(input)) {
+        cout << "The string is accepted (belongs to the language {wXw^R})." << endl;
+    } else {
+        cout << "The string is rejected (does not belong to the language {wXw^R})." << endl;
+    }
+
+    return 0;
+}
