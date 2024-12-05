@@ -1,0 +1,62 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Function to simulate the EVEN-EVEN FA
+bool simulateEvenEvenFA(const string &input) {
+    // Define states
+    enum State { Q00, Q01, Q10, Q11 };
+    State currentState = Q00;
+
+    // Process each character in the input
+    for (char ch : input) {
+        switch (currentState) {
+            case Q00:
+                if (ch == 'a')
+                    currentState = Q10;
+                else if (ch == 'b')
+                    currentState = Q01;
+                break;
+
+            case Q01:
+                if (ch == 'a')
+                    currentState = Q11;
+                else if (ch == 'b')
+                    currentState = Q00;
+                break;
+
+            case Q10:
+                if (ch == 'a')
+                    currentState = Q00;
+                else if (ch == 'b')
+                    currentState = Q11;
+                break;
+
+            case Q11:
+                if (ch == 'a')
+                    currentState = Q01;
+                else if (ch == 'b')
+                    currentState = Q10;
+                break;
+        }
+    }
+
+    // Accept if the final state is Q00
+    return currentState == Q00;
+}
+
+int main() {
+    string input;
+    cout << "Enter a string over {a, b}: ";
+    cin >> input;
+
+    // Check if the string is accepted by the FA
+    if (simulateEvenEvenFA(input)) {
+        cout << "The string is accepted (belongs to EVEN-EVEN language)." << endl;
+    } else {
+        cout << "The string is rejected (does not belong to EVEN-EVEN language)." << endl;
+    }
+
+    return 0;
+}
