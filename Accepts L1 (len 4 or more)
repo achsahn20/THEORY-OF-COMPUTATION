@@ -1,0 +1,37 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+// Function to simulate the FA
+bool simulateFA(const string &input) {
+    // Ensure the string has at least 4 characters
+    if (input.length() < 4) return false;
+
+    // Store the first two characters
+    char firstChar = input[0];
+    char secondChar = input[1];
+
+    // Traverse the string to check the last two characters
+    for (size_t i = 2; i < input.length() - 1; ++i) {
+        // Do nothing, intermediate characters don't affect the logic
+    }
+
+    // Compare the first two characters with the last two
+    return (input[input.length() - 2] == firstChar && input[input.length() - 1] == secondChar);
+}
+
+int main() {
+    string input;
+    cout << "Enter a string over {a, b}: ";
+    cin >> input;
+
+    // Check if the string is accepted by the FA
+    if (simulateFA(input)) {
+        cout << "The string is accepted (matches the conditions of L1)." << endl;
+    } else {
+        cout << "The string is rejected (does not match the conditions of L1)." << endl;
+    }
+
+    return 0;
+}
